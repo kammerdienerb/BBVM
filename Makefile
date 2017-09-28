@@ -46,6 +46,6 @@ release/obj/%.o: %.c
 	@$(CC) $(R_CFLAGS) -c -o $@ $<
 
 clean:
-	-@\rm debug/obj/src/*.o
-	-@\rm release/obj/src/*.o
-	-@\rm bin/$(TARGET)
+	@\rm -f debug/obj/src/*.o
+	@\rm -f release/obj/src/*.o
+	@\rm -f bin/$(TARGET)
