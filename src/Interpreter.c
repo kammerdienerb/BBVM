@@ -102,44 +102,19 @@ BBVM_INST_HANDLER(fstorei, {
     return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
 })
 
-static void_fn_ptr BBVM_inst_handler_getglobal(BBVirtualMachine * VM, BBVMInst inst) {
-    BBVMStackFrame * f = VM->cur_stack_frame;
-    
-    BBVMGlobalObject * gobj = &VM->global_objects[INST_GET_IMMEDIATE(inst)];
-    uint64_t ptr = (uint64_t)(VM->globaldata + gobj->GSP_off);
-    
-    BBVMSSAValIdx dest_idx = INST_GET_DEST_IDX(inst);
-    
-    f->SSA_vals[dest_idx] = ptr;
-    
-    return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
-}
-
-/*
 BBVM_INST_HANDLER(getglobal, {
-    BBVMStackFrame * f = VM->cur_stack_frame;
-    
-    BBVMGlobalObject * gobj = &VM->global_objects[INST_GET_IMMEDIATE(inst)];
-    uint64_t ptr = (uint64_t)(VM->globaldata + gobj->GSP_off);
-    
-    BBVMSSAValIdx dest_idx = INST_GET_DEST_IDX(inst);
-    
-    f->SSA_vals[dest_idx] = ptr;
-    
-    return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
+     BBVMStackFrame * f = VM->cur_stack_frame;
+ 
+     BBVMGlobalObject * gobj = &VM->global_objects[INST_GET_IMMEDIATE(inst)];
+     uint64_t ptr = (uint64_t)(VM->globaldata + gobj->GSP_off);
+ 
+     BBVMSSAValIdx dest_idx = INST_GET_DEST_IDX(inst);
+ 
+     f->SSA_vals[dest_idx] = ptr;
+ 
+     return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
 })
- */
 
-static void_fn_ptr BBVM_inst_handler_arg(BBVirtualMachine * VM, BBVMInst inst) {
-    BBVMStackFrame * f = VM->cur_stack_frame;
-    uint64_t val = f->SSA_vals[INST_GET_OP1_IDX(inst)];
-    
-    f->args_out[f->n_out_args++] = val;
-    
-    return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
-}
-
-/*
 BBVM_INST_HANDLER(arg, {
     BBVMStackFrame * f = VM->cur_stack_frame;
     uint64_t val = f->SSA_vals[INST_GET_OP1_IDX(inst)];
@@ -148,7 +123,6 @@ BBVM_INST_HANDLER(arg, {
     
     return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
 })
- */
 
 BBVM_INST_HANDLER(argi, {
     BBVMStackFrame * f = VM->cur_stack_frame;
