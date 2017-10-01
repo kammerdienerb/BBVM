@@ -23,10 +23,6 @@ BBVM_INST_HANDLER(escape, {
     return (void_fn_ptr)BBVM_GET_HANDLER_REF(escape);
 })
 
-BBVM_INST_HANDLER(entry, {
-    return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*(++VM->PC)));
-})
-
 BBVM_INST_HANDLER(alloc, {
     BBVMStackFrame * f = VM->cur_stack_frame;
     uint32_t n_bytes = INST_GET_IMMEDIATE(inst);
@@ -207,7 +203,7 @@ BBVM_INST_HANDLER(vret, {
     return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*VM->PC));
 })
 
-static void_fn_ptr BBVM_inst_handler_ret(BBVirtualMachine * VM, BBVMInst inst) {
+BBVM_INST_HANDLER(ret, {
     BBVMStackFrame * f = VM->cur_stack_frame;
     uint64_t val = f->SSA_vals[INST_GET_OP1_IDX(inst)];
     (f - 1)->SSA_vals[f->ret_val_dest_SSA] = val;
@@ -215,8 +211,7 @@ static void_fn_ptr BBVM_inst_handler_ret(BBVirtualMachine * VM, BBVMInst inst) {
     BBVM_pop_stack_frame(VM);
     
     return (void_fn_ptr)BBVM_GET_HANDLER(INST_GET_OPCODE(*VM->PC));
-}
-
+})
 
 BBVM_INST_HANDLER(reti, {
     BBVMStackFrame * f = VM->cur_stack_frame;
@@ -797,7 +792,6 @@ void BBVMInterp_init() {
     for (i = 0; i < UINT8_MAX; i += 1)
         BBVM_handler_table[i] = BBVM_GET_HANDLER_REF(escape);
     
-    BBVM_handler_table[OP_ENTRY] = BBVM_GET_HANDLER_REF(entry);
     /* BBVM_handler_table[OP_ESCAPE] = escape_handler; */
     
     BBVM_handler_table[OP_ALLOC] = BBVM_GET_HANDLER_REF(alloc);
@@ -816,7 +810,6 @@ void BBVMInterp_init() {
     BBVM_handler_table[OP_BR] = BBVM_GET_HANDLER_REF(br);
     BBVM_handler_table[OP_BRC] = BBVM_GET_HANDLER_REF(brc);
     BBVM_handler_table[OP_CALL] = BBVM_GET_HANDLER_REF(call);
-    /*BBVM_handler_table[OP_CALLI] = entry_handler;*/
     BBVM_handler_table[OP_FFI_CALL] = BBVM_GET_HANDLER_REF(ffi_call);
     BBVM_handler_table[OP_VRET] = BBVM_GET_HANDLER_REF(vret);
     BBVM_handler_table[OP_RET] = BBVM_GET_HANDLER_REF(ret);

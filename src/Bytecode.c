@@ -17,7 +17,6 @@ const char ** inst_names_table = NULL;
 void BBVMInst_dump_init() {
     inst_names_table = malloc(UINT8_MAX * sizeof(const char *));
     
-    inst_names_table[OP_ENTRY   ] = "entry";
     inst_names_table[OP_ESCAPE  ] = "escape";
     
     inst_names_table[OP_ALLOC   ] = "alloc";
@@ -103,7 +102,6 @@ void BBVMInst_dump(BBVMInst inst, BBVMBasicBlockTag * tags, BBVM_FFI_symbolinfo 
     printf("\t");
     
     switch (opcode) {
-        case OP_ENTRY:
         case OP_ESCAPE:
             printf("%s", inst_names_table[opcode]);
             break;
@@ -121,17 +119,17 @@ void BBVMInst_dump(BBVMInst inst, BBVMBasicBlockTag * tags, BBVM_FFI_symbolinfo 
         case OP_STORE:
         case OP_FSTORE:
             printf("%s\t", inst_names_table[opcode]);
-            printf("%%%u\t", INST_GET_OP1_IDX(inst));
+            printf("%%%u,\t", INST_GET_OP1_IDX(inst));
             printf("%%%u", INST_GET_OP2_IDX(inst));
             break;
         case OP_STOREI:
             printf("%s\t", inst_names_table[opcode]);
-            printf("%%%u\t", INST_GET_OP1_IDX(inst));
+            printf("%%%u,\t", INST_GET_OP1_IDX(inst));
             printf("%u", INST_GET_IMMEDIATE(inst));
             break;
         case OP_FSTOREI: {
             printf("%s\t", inst_names_table[opcode]);
-            printf("%%%u\t", INST_GET_OP1_IDX(inst));
+            printf("%%%u,\t", INST_GET_OP1_IDX(inst));
             
             uint32_t val32 = INST_GET_IMMEDIATE(inst);
             
@@ -170,14 +168,11 @@ void BBVMInst_dump(BBVMInst inst, BBVMBasicBlockTag * tags, BBVM_FFI_symbolinfo 
             printf("%s\t", inst_names_table[opcode]);
             printf("%%%s", ffi_infos[INST_GET_IMMEDIATE(inst)]->symbol);
             break;
-        case OP_BRC: {
+        case OP_BRC:
             printf("%s\t", inst_names_table[opcode]);
             printf("%%%u\t", INST_GET_OP1_IDX(inst));
-            int idx = INST_GET_OP2_IDX(inst);
-            BBVMBasicBlockTag * tag = &tags[idx];
             printf("%%%s", tags[INST_GET_OP2_IDX(inst)].name);
             break;
-        }
         case OP_CALLI:
             break;
         case OP_VRET:

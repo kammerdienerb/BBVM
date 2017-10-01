@@ -6,7 +6,6 @@
 %option       noyywrap
 
 %%
-entry                  return TOK_ENTRY;
 escape                 return TOK_ESCAPE;
 alloc                  return TOK_ALLOC;
 load                   return TOK_LOAD;
@@ -24,11 +23,12 @@ br                     return TOK_BR;
 brc                    return TOK_BRC;
 call                   return TOK_CALL;
 calli                  return TOK_CALLI;
-ffi_call               return TOK_FFI_CALL;
+fficall                return TOK_FFI_CALL;
 vret                   return TOK_VRET;
 ret                    return TOK_RET;
 reti                   return TOK_RETI;
 
+lss					   return TOK_LSS;
 lssi                   return TOK_LSSI;
 leq                    return TOK_LEQ;
 leqi                   return TOK_LEQI;
@@ -89,4 +89,6 @@ fprint                 return TOK_FPRINT;
 -?[0-9]+\.[0-9]+       return TOK_FLOAT_LITERAL;
 
 [a-zA-Z_][a-zA-Z0-9_]* return TOK_ID;
+
+[ \t\r\n]	;
 

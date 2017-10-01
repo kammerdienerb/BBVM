@@ -34,8 +34,7 @@ void BBVMInst_dump(BBVMInst inst, struct BBVMBasicBlockTag * tags, struct BBVM_F
 
 /* opcodes */
 
-#define OP_ENTRY        ((uint64_t)0x01)
-#define OP_ESCAPE       ((uint64_t)0x02)
+#define OP_ESCAPE       ((uint64_t)0x01)
 
 #define OP_ALLOC        ((uint64_t)0x10)
 #define OP_LOAD         ((uint64_t)0x11)

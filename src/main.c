@@ -9,6 +9,9 @@
 #include "VM.h"
 #include "BytecodeBuilder.h"
 
+extern FILE* yyin;
+int yyparse();
+
 void foo() {
     printf("This is foo()\n");
 }
@@ -160,6 +163,10 @@ int main(int argc, const char * argv[]) {
     
     BBVirtualMachine * VM = BBVM_bcreate(builder);
     BBVM_run(VM);
+
+	yyin = fopen("example.bb", "r");
+	yyparse();
+	fclose(yyin);
 
     return 0;
 }

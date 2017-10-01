@@ -4,3 +4,6 @@ release
 bin
 *.swp
 .gdb_history
+lex.yy.c
+y.tab.c
+y.tab.h
