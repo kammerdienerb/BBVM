@@ -170,11 +170,14 @@ void BBVMInst_dump(BBVMInst inst, BBVMBasicBlockTag * tags, BBVM_FFI_symbolinfo 
             printf("%s\t", inst_names_table[opcode]);
             printf("%%%s", ffi_infos[INST_GET_IMMEDIATE(inst)]->symbol);
             break;
-        case OP_BRC:
+        case OP_BRC: {
             printf("%s\t", inst_names_table[opcode]);
             printf("%%%u\t", INST_GET_OP1_IDX(inst));
+            int idx = INST_GET_OP2_IDX(inst);
+            BBVMBasicBlockTag * tag = &tags[idx];
             printf("%%%s", tags[INST_GET_OP2_IDX(inst)].name);
             break;
+        }
         case OP_CALLI:
             break;
         case OP_VRET:

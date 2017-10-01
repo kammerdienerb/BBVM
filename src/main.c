@@ -21,9 +21,23 @@ int fib(int n) {
 
 int main(int argc, const char * argv[]) {
     BBVMInstBuilder * builder = BBVMInstBuilder_create();
-    
-    /*
-    BBVMInstBuilder_begin_new_basic_block(builder, "entry");
+    BBVM_FFI_TYPE puts_arg_types[1] = { BBVM_FFI_PTR };
+    BBVMInstBuilder_add_ffi_symbol(builder, BBVM_FFI_create_symbolinfo("puts", puts_arg_types, 1, 0, BBVM_FFI_INT));
+
+    BBVMBasicBlockIdx entry = BBVMInstBuilder_begin_new_basic_block(builder, "entry");
+	BBVMBasicBlockIdx exit_bb = BBVMInstBuilder_begin_new_basic_block(builder, "exit");
+    BBVMInstBuilder_push_escape_inst(builder);
+	BBVMInstBuilder_set_current_basic_block(builder, entry);
+
+    BBVMGlobalValueIdx hw = BBVMInstBuilder_add_global_string(builder, "Hello, world!");
+	BBVMSSAValIdx arg = BBVMInstBuilder_push_getglobal_inst(builder, hw);
+    BBVMInstBuilder_push_arg_inst(builder, arg);
+    BBVMInstBuilder_push_ffi_call_inst(builder, "puts");
+	
+	BBVMSSAValIdx zero = BBVMInstBuilder_push_alloc_inst(builder, 8);
+	BBVMInstBuilder_push_storei_inst(builder, zero, 0);
+	BBVMSSAValIdx lzero = BBVMInstBuilder_push_load_inst(builder, zero);
+	BBVMInstBuilder_push_brc_inst(builder, lzero, exit_bb);
     BBVMSSAValIdx a = BBVMInstBuilder_push_alloc_inst(builder, 8);
     BBVMSSAValIdx five = BBVMInstBuilder_push_alloc_inst(builder, 8);
     BBVMInstBuilder_push_fstorei_inst(builder, a, 1.2345);
@@ -38,7 +52,6 @@ int main(int argc, const char * argv[]) {
     BBVMInstBuilder_push_print_inst(builder, g);
     BBVMSSAValIdx h = BBVMInstBuilder_push_fequi_inst(builder, e, 6.0);
     BBVMInstBuilder_push_print_inst(builder, h);
-     */
     
     
     /*
@@ -55,7 +68,7 @@ int main(int argc, const char * argv[]) {
     BBVMGlobalValueIdx sf = BBVMInstBuilder_add_global_string(builder, "Slow fib");
     */
      
-    BBVMBasicBlockIdx entry = BBVMInstBuilder_begin_new_basic_block(builder, "entry");
+    /* BBVMBasicBlockIdx entry = BBVMInstBuilder_begin_new_basic_block(builder, "entry"); */
     
     /*
     BBVMSSAValIdx arg = BBVMInstBuilder_push_getglobal_inst(builder, message);
@@ -88,7 +101,8 @@ int main(int argc, const char * argv[]) {
     BBVMInstBuilder_push_arg_inst(builder, sfarg);
     BBVMInstBuilder_push_ffi_call_inst(builder, "puts");
     */
-    
+   
+	/*
     BBVMBasicBlockIdx fib = BBVMInstBuilder_begin_new_basic_block(builder, "fib");
     
     
@@ -134,7 +148,8 @@ int main(int argc, const char * argv[]) {
     BBVMInstBuilder_push_ret_inst(builder, a);
     BBVMInstBuilder_set_current_basic_block(builder, ret1);
     BBVMInstBuilder_push_ret_inst(builder, b);
-    
+   
+	*/
     
  
     BBVMInstBuilder_finalize(builder);
@@ -145,6 +160,6 @@ int main(int argc, const char * argv[]) {
     
     BBVirtualMachine * VM = BBVM_bcreate(builder);
     BBVM_run(VM);
-    
+
     return 0;
 }
